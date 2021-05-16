@@ -1,5 +1,5 @@
 import logging
-from ..common.helper_class import Singleton
+from ..common.singleton import Singleton
 
 class Logger(metaclass=Singleton):
 

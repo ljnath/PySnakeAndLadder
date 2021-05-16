@@ -5,7 +5,6 @@ class game_assets(Exception):
         Exception.__init__(self)
         self.logger = Logger().get(name = 'snake&ladder')
         
-        
 class MissingPlayerNameException(game_assets):
     def __init__(self):
         game_assets.__init__(self)

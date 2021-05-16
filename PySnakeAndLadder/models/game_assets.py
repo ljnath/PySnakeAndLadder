@@ -1,4 +1,11 @@
-class GameAssets:
+import sys
+import os
+
+from common.singleton import Singleton
+
+sys.path.append(os.path.realpath('..'))
+
+class GameAssets(metaclass=Singleton):
     
     def __init__(self):
         self._snakes = {
@@ -13,9 +20,11 @@ class GameAssets:
             2 : (72, 95)
         }
     
-    def get_snakes(self) -> dict:
+    @property
+    def snakes(self) -> dict:
         return self._snakes
     
-    def get_ladder(self) -> dict:
+    @property
+    def ladders(self) -> dict:
         return self.get_ladder
     
