@@ -1,16 +1,21 @@
 from logger import Logger
 
-class game_assets(Exception):
+class BaseException(Exception):
     def __init__(self):
         Exception.__init__(self)
-        self.logger = Logger().get(name = 'snake&ladder')
+        self.logger = Logger().get()
         
-class MissingPlayerNameException(game_assets):
+class MissingPlayerNameException(BaseException):
     def __init__(self):
-        game_assets.__init__(self)
+        BaseException.__init__(self)
         self.logger.exception('Player name is a mandatory property and it cannot be left empty.')
         
-class UnsupportedDiceTypeException(game_assets):
+class UnsupportedDiceTypeException(BaseException):
     def __init__(self, type):
-        game_assets.__init__(self)
+        BaseException.__init__(self)
         self.logger.exception(f'{type} is an un-supported dice type')
+        
+class InvalidGameAssetException(BaseException):
+    def __init__(self, message):
+        BaseException.__init__(self)
+        self.logger.exception(f'Invalid game asset. {message if message else ""}')

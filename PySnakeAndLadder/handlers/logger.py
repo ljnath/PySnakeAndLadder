@@ -6,7 +6,7 @@ class Logger(metaclass=Singleton):
     def __init__(self):
         self.__filename = 'game.log'
         
-    def get(self, name = 'SomeApp'):
+    def get(self, name = 'snake&ladder'):
         """
         method to get an instance of the logger class with a given name
         :param name: name of logger

@@ -12,6 +12,10 @@ class Dice:
         self.__crooked_faces = tuple([i for i in self.__normal_faces if i % 2 == 0 ])
         
     @property
+    def type(self):
+        return self.__dice_type.value
+        
+    @property
     def current_value(self) -> int:
         return self.__current_value
     
@@ -20,9 +24,9 @@ class Dice:
         self.__current_value = value
     
     def roll(self) -> int:
-        if self.__dice_type == DiceType.NORMAL.value:
+        if self.type == DiceType.NORMAL.value:
             return random.choice(self.__normal_faces)
-        elif self.__dice_type == DiceType.CROOKED.value:
+        elif self.type == DiceType.CROOKED.value:
             return random.choice(self.__crooked_faces)
         else:
-            raise UnsupportedDiceType(self.__dice_type)
+            raise UnsupportedDiceType(self.type)
