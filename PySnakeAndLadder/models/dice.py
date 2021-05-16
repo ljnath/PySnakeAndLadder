@@ -1,8 +1,13 @@
+import os
 import random
+import sys
 
 from handlers.exceptions import UnsupportedDiceType
+
 from dice_type import DiceType
-    
+
+sys.path.append(os.path.realpath('..'))
+
 class Dice:
     def __init__(self, type: DiceType):
         self.__dice_type = type

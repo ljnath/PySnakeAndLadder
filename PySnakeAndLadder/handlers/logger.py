@@ -1,5 +1,10 @@
 import logging
-from ..common.singleton import Singleton
+import os
+import sys
+
+from common.singleton import Singleton
+
+sys.path.append(os.path.realpath('..'))
 
 class Logger(metaclass=Singleton):
 

@@ -9,10 +9,10 @@ from models.dice_type import DiceType
 sys.path.append(os.path.realpath('..'))
 
 class Player:
-    def __init__(self):
+    def __init__(self, name, dice_type = DiceType.NORMAL):
         self.__name = None
-        self.__score = 0
-        self.__dice = Dice(DiceType.NORMAL)
+        self.__position = 0
+        self.__dice = Dice(dice_type)
     
     @property
     def name(self) -> str:
@@ -25,12 +25,12 @@ class Player:
         self.__name = value
         
     @property
-    def score(self) -> int:
-        return self.__score
+    def position(self) -> int:
+        return self.__position
     
-    @score.setter
-    def score(self, value:int):
-        self.__score = value
+    @position.setter
+    def position(self, value:int):
+        self.__position = value
         
     @property
     def dice(self) -> Dice:
