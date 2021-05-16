@@ -1,4 +1,4 @@
-from .logger import Logger
+from logger import Logger
 
 class BaseError(Exception):
     def __init__(self):
@@ -10,3 +10,8 @@ class MissingPlayerNameError(BaseError):
     def __init__(self):
         BaseError.__init__(self)
         self.logger.exception('Player name is a mandatory property and it cannot be left empty.')
+        
+class UnsupportedDiceType(BaseError):
+    def __init__(self, type):
+        BaseError.__init__(self)
+        self.logger.exception(f'{type} is an un-supported dice type')

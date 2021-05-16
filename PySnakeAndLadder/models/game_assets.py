@@ -1,4 +1,4 @@
-class Assets:
+class GameAssets:
     
     def __init__(self):
         self._snakes = {
@@ -13,9 +13,9 @@ class Assets:
             2 : (72, 95)
         }
     
-    def get_snakes(self):
+    def get_snakes(self) -> dict:
         return self._snakes
     
-    def get_ladder(self):
+    def get_ladder(self) -> dict:
         return self.get_ladder
     
