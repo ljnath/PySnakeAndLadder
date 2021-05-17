@@ -1,3 +1,6 @@
+"""
+Python module for DiceType Enum
+"""
 from enum import Enum
 
 class DiceType(Enum):
@@ -6,7 +9,7 @@ class DiceType(Enum):
     """
     NORMAL = 'normal'
     CROOKED = 'crooked'
-    
+
     @staticmethod
     def to_list():
         """

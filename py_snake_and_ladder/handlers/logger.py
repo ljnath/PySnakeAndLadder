@@ -1,8 +1,11 @@
+"""
+Python module for log handling
+"""
 import logging
 import os
 import sys
 
-from PySnakeAndLadder.common.singleton import Singleton
+from py_snake_and_ladder.common.singleton import Singleton
 
 sys.path.append(os.path.realpath('..'))
 
@@ -12,7 +15,7 @@ class Logger(metaclass=Singleton):
     """
     def __init__(self):
         self.__filename = 'game.log'
-        
+
     def get(self, name = 'snake&ladder') -> logging.Logger:
         """
         Method to get an instance of the logger class with a given name
@@ -28,5 +31,5 @@ class Logger(metaclass=Singleton):
             file_log_handler = logging.FileHandler(filename=self.__filename)
             file_log_handler.setFormatter(log_formatter)
             logger.addHandler(file_log_handler)
-            
+
         return logger

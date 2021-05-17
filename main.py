@@ -3,7 +3,7 @@
 
 # Driver script for interacting with the same
 
-from PySnakeAndLadder import PySnakeAndLadder
+from py_snake_and_ladder import PySnakeAndLadder
 
 def play_game():
     py_snake_and_laddder = PySnakeAndLadder()

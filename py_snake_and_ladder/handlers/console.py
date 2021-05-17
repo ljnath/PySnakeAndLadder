@@ -1,7 +1,10 @@
+"""
+Python module for console interaction
+"""
 import os
 import sys
 
-from PySnakeAndLadder.models.dice_type import DiceType
+from py_snake_and_ladder.models.dice_type import DiceType
 
 sys.path.append(os.path.realpath('..'))
 
@@ -9,14 +12,14 @@ class Console:
     """
     Class for handling console interactions
     """
-    
+
     @staticmethod
     def clear() -> None:
         """
         Static method to clear the console based on OS
         """
         os.system('clear' if os.name != 'nt' else 'cls')
-    
+
     @staticmethod
     def get_player_name() -> str:
         """
@@ -28,7 +31,7 @@ class Console:
             if len(player_name.strip()) == 0:
                 player_name = None
         return player_name
-        
+
     @staticmethod
     def get_dice_type() -> DiceType:
         """
@@ -37,20 +40,20 @@ class Console:
         user_choice = 0
         dice_type_as_list = DiceType.to_list()                      # converting the enum to list
         valid_choice = tuple(range(1, len(dice_type_as_list) + 1))  # valid choices will be the serial number of the enum
-        
+
         message = '* Please choose dice-type:'
-        for index, type in enumerate(dice_type_as_list):
-            message += f'\n\t{index+1} - {type}'
+        for index, dice_type in enumerate(dice_type_as_list):
+            message += f'\n\t{index+1} - {dice_type}'
         message += f'\nYour choice {valid_choice}: '
-            
+
         while user_choice not in valid_choice:
             try:
                 user_choice = int(input(message))
             except ValueError:
                 user_choice = 0
-                
+
         return list(DiceType)[user_choice - 1]
-            
+
     @staticmethod
     def get_roll_confirmation():
         """

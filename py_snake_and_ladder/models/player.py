@@ -1,9 +1,12 @@
+"""
+Python module for Player model
+"""
 import os
 import sys
 
-from PySnakeAndLadder.handlers.exceptions import MissingPlayerNameException
-from PySnakeAndLadder.models.dice import Dice
-from PySnakeAndLadder.models.dice_type import DiceType
+from py_snake_and_ladder.handlers.exceptions import MissingPlayerNameException
+from py_snake_and_ladder.models.dice import Dice
+from py_snake_and_ladder.models.dice_type import DiceType
 
 sys.path.append(os.path.realpath('..'))
 
@@ -16,7 +19,7 @@ class Player:
         self.__name = name
         self.__position = 0
         self.__dice = Dice(dice_type)
-    
+
     @property
     def name(self) -> str:
         """
@@ -25,28 +28,28 @@ class Player:
         if not self.__name:
             raise MissingPlayerNameException()
         return self.__name
-    
+
     @property
     def position(self) -> int:
         """
         Property for getting current player position
         """
         return self.__position
-    
+
     @position.setter
     def position(self, value:int) -> None:
         """
         Property for setting position for the player
         """
         self.__position = value
-        
+
     @property
     def dice(self) -> Dice:
         """
         Property for getting the player's instance of dice used in the gameplay
         """
         return self.__dice
-    
+
     @dice.setter
     def dice(self, value:Dice) -> None:
         """
