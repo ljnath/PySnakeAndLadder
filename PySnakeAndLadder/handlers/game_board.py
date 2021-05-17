@@ -40,19 +40,21 @@ class GameBoard:
         self.__logger.info('Validating game asset data')
         
         # validating snake data
-        for _, value in self.__game_assets.snakes.items():
-            if value[1] < value[0]:
+        for key, value in self.__game_assets.snakes.items():
+            self.__logger.debug(f'Validating snake asset - key = {key} ; value = {value}')
+            if value[0] < value[1]:
                 raise InvalidGameAssetException('Snake should always be from top to bottom')
             elif value[1] == 100:
                 raise InvalidGameAssetException('Snakes head at at game end point is not pratical enough !')
-            elif value[1] - value[0] < 20:
-                raise InvalidGameAssetException('Horizontal or too small snakes are not practical enough !')
+            # elif value[0] - value[1] < 20:
+            #     raise InvalidGameAssetException('Horizontal or too small snakes are not practical enough !')
             elif any(value) > 100 or any(value) <  1:
                 raise InvalidGameAssetException('Snake head or tail is outside the board range (1-100)')
             
         # validating ladder data
-        for _, value in self.__game_assets.ladder.items():
-            if value[0] < value[1]:
+        for key, value in self.__game_assets.ladders.items():
+            self.__logger.debug(f'Validating ladder asset - key = {key} ; value = {value}')
+            if value[0] > value[1]:
                 raise InvalidGameAssetException('Ladders are suppose to to be climbed up and not down')
             elif 100 in value or 1 in value:
                 raise InvalidGameAssetException('Ladders cannot start or end at position 0 and 100')
@@ -63,42 +65,53 @@ class GameBoard:
         
     def draw(self):
         Console.clear()
-        print(f'\nSNAKE & LADDER 0.1\n\nGame board\n\n')
+        print(f'\n{"SNAKE & LADDER 0.1".center(131)}')
         
         positions = list(range(1, 101))
         
         for key, value in self.__game_assets.snakes.items():
-            positions[value[1] - 1] = f'S{key+1}_HEAD'
-            positions[value[0] - 1] = f'S{key+1}_TAIL'
+            positions[value[0] - 1] = f'S{key+1}_HEAD'
+            positions[value[1] - 1] = f'S{key+1}_TAIL'
         
-        for key, value in self.__game_assets.ladder.items():
-            positions[value[1] - 1] = f'L{key+1}_START'
-            positions[value[0] - 1] = f'L{key+1}_END'
+        for key, value in self.__game_assets.ladders.items():
+            positions[value[0] - 1] = f'L{key+1}_START'
+            positions[value[1] - 1] = f'L{key+1}_END'
             
-        positions[self.__player.current_value] = 'PLAYER'
-        self.__draw_board(positions.reverse())
+        if self.__player.position > 0:
+            positions[self.__player.position - 1] = f'* {self.__player.name[:10].upper()} *'
+            
+        self.__draw_board(positions)
+        self.__draw_legend()
         
         if self.player_notification:
-            print(f'\n{self.player_notification}')
+            print(f'\nINFO: {self.player_notification}\n')
         
     def __draw_board(self, board_data):
-        cell_length = 20
-        seperator_length = 211                                              # cell_length * item_count + seperator_count
+        board_data.reverse()
+        cell_length = 12
+        seperator_length = cell_length * 10 + 11                            # cell_length * item_count + seperator_count
         print('-' * seperator_length, end='')
         
         for i in range(10):                                                 # total number of rows 100 / 10 = 10
-            row_start_position = i * 10
-            items = board_data[row_start_position, row_start_position + 10] # 10 element in each row
+            row_start_pos = i * 10
+            items = board_data[row_start_pos : row_start_pos + 10]          # 10 element in each row
             if (i % 2 != 0):
                 items.reverse()                                             # flipping row items incase of odd rows
             
             print('')
             [print(f'|{str(item).center(cell_length)}', end = '') for item in items]
             print(f'|\n{"-"*seperator_length}', end='')
-
-    def display_message(self, message):
-        print(message)
         
+    def __draw_legend(self):
+        print('\n\n  GAME LEGEND:')
+        for key, value in self.__game_assets.snakes.items():
+            print(f'\t* Snake {key+1} : {value[0]}-{value[1]}', end = '\t')
+        print()
+        for key, value in self.__game_assets.ladders.items():
+            print(f'\t* Ladder {key+1} : {value[0]}-{value[1]}', end = '\t')
+        print('\n\t* LX_START : start of ladder\n\t* LX_END : end of ladder\n\t* SX_HEAD : start or head of snake\n\t* SX_TAIL : end or tail of snake')
+        print('\n')
+            
     def roll_dice(self):
         Console.get_roll_confirmation()
         self.__player.dice.roll()

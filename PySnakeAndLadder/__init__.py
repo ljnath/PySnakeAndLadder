@@ -19,7 +19,7 @@ class PySnakeAndLadder:
         
     def play(self):
         Console.clear()
-        print('Welcome to Snake And Ladder 0.1\nLets begin by gathering a few details about you ...\n\n')
+        print('Welcome to SNAKE & LADDER 0.1\nLets begin by gathering a few details about you ...\n\n')
         player_name = Console.get_player_name()
         dice_type = Console.get_dice_type()
         
@@ -27,8 +27,9 @@ class PySnakeAndLadder:
         self.__game_board = GameBoard(self.__player)
         
         while(not self.__game_board.has_ended):
-            self.__game_board.player_notification = None
             self.__game_board.draw()
+            self.__game_board.player_notification = None
+            
             self.__game_board.roll_dice()
             
             self.__game_board.player_notification = f'New dice value is {self.__player.dice.current_value}.\n'
@@ -56,8 +57,8 @@ class PySnakeAndLadder:
                 break
             
         for key, value in self.__game_assets.snakes.items():
-            if value[1] == self.__player.position:
-                self.__player.position = value[0]
+            if value[0] == self.__player.position:
+                self.__player.position = value[1]
                 self.__logger.info(f'{self.__player.name} has been bitten by snake {key+1} in position {value[1]} ; new position is {value[0]}')
                 self.__game_board.player_notification += f'Oops!, you have been bitten by snake {key+1}'
                 break

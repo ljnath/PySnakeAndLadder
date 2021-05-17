@@ -15,7 +15,7 @@ class GameAssets(metaclass=Singleton):
         }
         
         self._ladder = {
-            0 : (5, 10),
+            0 : (5, 30),
             1 : (23, 66),
             2 : (72, 95)
         }
@@ -26,5 +26,5 @@ class GameAssets(metaclass=Singleton):
     
     @property
     def ladders(self) -> dict:
-        return self._get_ladder
+        return self._ladder
     

@@ -29,8 +29,8 @@ class Dice:
     
     def roll(self) -> int:
         if self.type == DiceType.NORMAL.value:
-            return random.choice(self.__normal_faces)
+            self.current_value = random.choice(self.__normal_faces)
         elif self.type == DiceType.CROOKED.value:
-            return random.choice(self.__crooked_faces)
+            self.current_value = random.choice(self.__crooked_faces)
         else:
             raise UnsupportedDiceTypeException(self.type)

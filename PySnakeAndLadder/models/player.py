@@ -9,7 +9,7 @@ sys.path.append(os.path.realpath('..'))
 
 class Player:
     def __init__(self, name, dice_type = DiceType.NORMAL):
-        self.__name = None
+        self.__name = name
         self.__position = 0
         self.__dice = Dice(dice_type)
     
@@ -19,10 +19,6 @@ class Player:
             raise MissingPlayerNameException()
         return self.__name
     
-    @name.setter
-    def name(self, value:str):
-        self.__name = value
-        
     @property
     def position(self) -> int:
         return self.__position
