@@ -65,10 +65,24 @@ def test_game_assets_property():
 #     """
 #     test validation in GameAssets model
 #     """
-#     mocker.patch("GameAssets().snakes", return_value={0:(0,0)})
+#     def mocked_method():
+#         return {
+#             0 : (14, 70),
+#             1 : (50, 3),
+#             2 : (93, 32)
+#         }
+
+#     bad_value = {
+#             0 : (14, 70),
+#             1 : (50, 3),
+#             2 : (93, 32)
+#         }
+#     game_assets = GameAssets()
+#     mocker.patch("py_snake_and_ladder.models.game_assets.GameAssets.snakes", return_value = bad_value)
     
-    # with pytest.raises(InvalidGameAssetException):
-    #     GameAssets()
+#     # mocker.patch("py_snake_and_ladder.models.game_assets.GameAssets.ladders", return_value = bad_asset)
+#     with pytest.raises(InvalidGameAssetException):
+#         game_assets.validate()
     
 def test_dice_type():
     """

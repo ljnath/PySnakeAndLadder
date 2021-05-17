@@ -10,6 +10,38 @@ from py_snake_and_ladder.handlers.logger import Logger
 
 sys.path.append(os.path.realpath('..'))
 
+class Snake():
+    """
+    Snake model
+    """
+    def __init__(self, head, tail):
+        self._head = head
+        self._tail = tail
+
+    @property    
+    def head(self):
+        return self._head
+    
+    @property
+    def tail(self):
+        return self._tail
+
+class Ladder():
+    """
+    Ladder model
+    """
+    def __init__(self, start, end):
+        self._start = start
+        self._end = end
+
+    @property    
+    def start(self):
+        return self._start
+    
+    @property
+    def end(self):
+        return self._end
+        
 class GameAssets(metaclass=Singleton):
     """
     Game assets model class.
@@ -20,54 +52,19 @@ class GameAssets(metaclass=Singleton):
 
         # creating snakes assets as dict type where key is the snake count,
         # and the value is a tuple showing the start and end of the snake
-        self._snakes = {
-            0 : (14, 7),
-            1 : (50, 3),
-            2 : (93, 32)
-        }
+        self._snakes = (
+            Snake(14, 7),
+            Snake(50, 3),
+            Snake(93, 32)
+        )
 
         # creating ladder assets as dict type where key is the ladder count,
         # and the value is a tuple showing the start and end of the ladder
-        self._ladder = {
-            0 : (5, 30),
-            1 : (23, 66),
-            2 : (72, 95)
-        }
-
-        self.__validate_snakes()
-        self.__validate_ladders()
-
-    def __validate_snakes(self):
-        """
-        Private method for validating snakes
-        """
-        self.__logger.info('Validating "snake" game asset')
-        for key, value in self.snakes.items():
-            self.__logger.debug(f'Validating snake asset - key = {key} ; value = {value}')
-            if value[0] < value[1]:
-                raise InvalidGameAssetException('Snake should always be from top to bottom')
-            if value[1] == 100:
-                raise InvalidGameAssetException('Snakes head at at game end point is not pratical enough !')
-            # if value[0] - value[1] < 20:
-            #     raise InvalidGameAssetException('Horizontal or too small snakes are not practical enough !')
-            if any(value) > 100 or any(value) <  1:
-                raise InvalidGameAssetException('Snake head or tail is outside the board range (1-100)')
-
-    def __validate_ladders(self):
-        """
-        Private method for validating ladders
-        """
-        self.__logger.info('Validating "ladders" game asset')
-        for key, value in self.ladders.items():
-            self.__logger.debug(f'Validating ladder asset - key = {key} ; value = {value}')
-            if value[0] > value[1]:
-                raise InvalidGameAssetException('Ladders are suppose to to be climbed up and not down')
-            if 100 in value or 1 in value:
-                raise InvalidGameAssetException('Ladders cannot start or end at position 0 and 100')
-            if value[1] - value[0] < 20:
-                raise InvalidGameAssetException('Horizontal or too small ladder are not practical enough !')
-            if any(value) > 100 or any(value) <  1:
-                raise InvalidGameAssetException('Ladder head or tail is outside the board range (1-100)')
+        self._ladder = (
+            Ladder(5, 30),
+            Ladder(23, 66),
+            Ladder(72, 95)
+        )
 
     @property
     def snakes(self) -> dict:
@@ -82,3 +79,30 @@ class GameAssets(metaclass=Singleton):
         Property for setting the ladder game asset
         """
         return self._ladder
+
+    def validate(self):
+        self.__logger.info('Validating "snake" game asset')
+        for snake in self.snakes:
+            self.__logger.debug(f'Validating snake game-asset: head={snake.head} ; tail={snake.tail}')
+            if snake.head < snake.tail:
+                raise InvalidGameAssetException('Snake should always be from top to bottom')
+            if snake.head == 100:
+                raise InvalidGameAssetException('Snakes head at at game end point is not pratical enough !')
+            
+            snake_positions = (snake.head, snake.tail)
+            if any(snake_positions) > 100 and any(snake_positions) <  1:
+                raise InvalidGameAssetException('Snake head or tail is outside the board range (1-100)')
+            
+        self.__logger.info('Validating "ladders" game asset')
+        for ladder in self.ladders:
+            self.__logger.debug(f'Validating ladder game-asset: start={ladder.start} ; end={ladder.end}')
+            if ladder.start > ladder.end:
+                raise InvalidGameAssetException('Ladders are suppose to to be climbed up and not down')
+            if ladder.end - ladder.start < 20:
+                raise InvalidGameAssetException('Horizontal or too small ladder are not practical enough !')
+            
+            ladder_position = (ladder.start, ladder.end)
+            if 100 in ladder_position or 1 in ladder_position:
+                raise InvalidGameAssetException('Ladders cannot start or end at position 0 and 100')
+            if any(ladder_position) > 100 and any(ladder_position) <  1:
+                raise InvalidGameAssetException('Ladder head or tail is outside the board range (1-100)')

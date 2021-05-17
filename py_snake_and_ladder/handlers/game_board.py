@@ -24,6 +24,7 @@ class GameBoard:
         self.__logger.info(f'Created game board for player {self.__player.name}; selected dice type is {self.__player.dice.dice_type}')
 
         self.__game_assets = GameAssets()
+        self.__game_assets.validate()
 
     @property
     def has_ended(self) -> bool:
@@ -59,7 +60,7 @@ class GameBoard:
         """
         Console.get_roll_confirmation()
         self.__player.dice.roll()
-        self.__logger.debug(f'Roll complete, dice value is {self.__player.dice.value}')
+        self.__logger.debug(f'Player has rolled the dice from position {self.__player.position}; dice value is {self.__player.dice.value}')
 
     def draw(self) -> None:
         """
@@ -72,15 +73,15 @@ class GameBoard:
 
         # updating snake head & tail in the board_numbers,
         # SX_HEAD is the head of the snake while SX_TAIL is its end
-        for key, value in self.__game_assets.snakes.items():
-            board_numbers[value[0] - 1] = f'S{key+1}_HEAD'
-            board_numbers[value[1] - 1] = f'S{key+1}_TAIL'
+        for index, snake in enumerate(self.__game_assets.snakes):
+            board_numbers[snake.head - 1] = f'S{index+1}_HEAD'
+            board_numbers[snake.tail - 1] = f'S{index+1}_TAIL'
 
         # updating ladder start & end in the board_numbers,
         # LX_START is the start of the ladder while LX_END is the end of it
-        for key, value in self.__game_assets.ladders.items():
-            board_numbers[value[0] - 1] = f'L{key+1}_START'
-            board_numbers[value[1] - 1] = f'L{key+1}_END'
+        for index, ladder in enumerate(self.__game_assets.ladders):
+            board_numbers[ladder.start - 1] = f'L{index+1}_START'
+            board_numbers[ladder.end - 1] = f'L{index+1}_END'
 
         # updating board_numbers with player position if player has moved
         # board_number is updated to player name in upper case enclosed with '*' character
@@ -120,10 +121,10 @@ class GameBoard:
         Private method for drawing the game legends
         """
         print('\n\n  GAME LEGEND:')
-        for key, value in self.__game_assets.snakes.items():
-            print(f'\t* Snake {key+1} : {value[0]}-{value[1]}', end = '\t')
+        for index, snake in enumerate(self.__game_assets.snakes):
+            print(f'\t* Snake {index+1} : {snake.head} - {snake.tail}', end = '\t')
         print()
-        for key, value in self.__game_assets.ladders.items():
-            print(f'\t* Ladder {key+1} : {value[0]}-{value[1]}', end = '\t')
+        for index, ladder in enumerate(self.__game_assets.ladders):
+            print(f'\t* Ladder {index+1} : {ladder.start} - {ladder.end}', end = '\t')
         print('\n\t* LX_START : start of ladder\n\t* LX_END : end of ladder\n\t* SX_HEAD : start or head of snake\n\t* SX_TAIL : end or tail of snake')
         print('\n')

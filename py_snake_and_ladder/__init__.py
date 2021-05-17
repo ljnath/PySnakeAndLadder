@@ -70,18 +70,18 @@ class PySnakeAndLadder:
         Method to check if player has hit either a snake or ladder and update players position accordingly
         """
         # checking if player has hit the foot of the ladder, if yes then player position to updated to the top of ladder
-        for key, value in self.__game_assets.ladders.items():
-            if value[0] == self.__player.position:
-                self.__player.position = value[1]
-                self.__logger.info(f'{self.__player.name} has climbed ladder {key+1} from {value[0]} to {value[1]}')
-                self.__game_board.notification_msg += f'Great, you just hit ladder no. {key+1} and climbed from {value[0]} to {value[1]}'
+        for index, ladder in enumerate(self.__game_assets.ladders):
+            if ladder.start == self.__player.position:
+                self.__player.position = ladder.end
+                self.__logger.info(f'{self.__player.name} has climbed ladder {index+1} from {ladder.start} to {ladder.end}')
+                self.__game_board.notification_msg += f'Great, you just hit a ladder and climbed from {ladder.start} to {ladder.end}'
                 break
 
         # checking if player has hit the head of snake, if yes then player position to updated to the tail of the snake
-        for key, value in self.__game_assets.snakes.items():
-            if value[0] == self.__player.position:
-                self.__player.position = value[1]
-                self.__logger.info(f'{self.__player.name} has been bitten by snake {key+1} at position {value[0]} ; your new position is {value[1]}')
-                self.__game_board.notification_msg += f'Oops!, you have been bitten by snake no. {key+1} at {value[0]}, you are now swallowed to {value[1]}'
+        for index, snake in enumerate(self.__game_assets.snakes):
+            if snake.head == self.__player.position:
+                self.__player.position = snake.tail
+                self.__logger.info(f'{self.__player.name} has been swallowed by a snake at {snake.head} ; your new position is {snake.tail}')
+                self.__game_board.notification_msg += f'Oops!, you have been bitten by snake at {snake.head}, your new position is {snake.tail}'
                 break
         
