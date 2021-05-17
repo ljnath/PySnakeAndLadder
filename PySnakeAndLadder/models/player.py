@@ -1,10 +1,9 @@
 import os
 import sys
 
-from handlers.exceptions import MissingPlayerNameError
-
-from models.dice import Dice
-from models.dice_type import DiceType
+from PySnakeAndLadder.handlers.exceptions import MissingPlayerNameException
+from PySnakeAndLadder.models.dice import Dice
+from PySnakeAndLadder.models.dice_type import DiceType
 
 sys.path.append(os.path.realpath('..'))
 
@@ -17,7 +16,7 @@ class Player:
     @property
     def name(self) -> str:
         if not self.__name:
-            raise MissingPlayerNameError()
+            raise MissingPlayerNameException()
         return self.__name
     
     @name.setter

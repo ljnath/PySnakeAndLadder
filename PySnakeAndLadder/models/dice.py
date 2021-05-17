@@ -2,9 +2,8 @@ import os
 import random
 import sys
 
-from handlers.exceptions import UnsupportedDiceType
-
-from dice_type import DiceType
+from PySnakeAndLadder.handlers.exceptions import UnsupportedDiceTypeException
+from PySnakeAndLadder.models.dice_type import DiceType
 
 sys.path.append(os.path.realpath('..'))
 
@@ -34,4 +33,4 @@ class Dice:
         elif self.type == DiceType.CROOKED.value:
             return random.choice(self.__crooked_faces)
         else:
-            raise UnsupportedDiceType(self.type)
+            raise UnsupportedDiceTypeException(self.type)

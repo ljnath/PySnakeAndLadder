@@ -1,12 +1,11 @@
 import os
 import sys
 
-from hanlders.console import Console
-from models.game_assets import GameAssets
-from models.player import Player
-
-from handlers.exceptions import InvalidGameAssetException
-from handlers.logger import Logger
+from PySnakeAndLadder.handlers.exceptions import InvalidGameAssetException
+from PySnakeAndLadder.handlers.logger import Logger
+from PySnakeAndLadder.handlers.console import Console
+from PySnakeAndLadder.models.game_assets import GameAssets
+from PySnakeAndLadder.models.player import Player
 
 sys.path.append(os.path.realpath('..'))
 

@@ -1,11 +1,11 @@
 import os
 import sys
 
-from handlers.game_board import GameBoard
-from handlers.console import Console
-from handlers.logger import Logger
-from models.game_assets import GameAssets
-from models.player import Player
+from PySnakeAndLadder.handlers.game_board import GameBoard
+from PySnakeAndLadder.handlers.console import Console
+from PySnakeAndLadder.handlers.logger import Logger
+from PySnakeAndLadder.models.game_assets import GameAssets
+from PySnakeAndLadder.models.player import Player
 
 sys.path.append(os.path.realpath('.'))
 
@@ -18,7 +18,8 @@ class PySnakeAndLadder:
         self.__game_assets = GameAssets()
         
     def play(self):
-        print('Welcome to Snake And Ladder 0.1\nBefore playing the game, please answer the following -')
+        Console.clear()
+        print('Welcome to Snake And Ladder 0.1\nLets begin by gathering a few details about you ...\n\n')
         player_name = Console.get_player_name()
         dice_type = Console.get_dice_type()
         

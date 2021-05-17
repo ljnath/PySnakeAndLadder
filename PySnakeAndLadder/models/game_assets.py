@@ -1,7 +1,7 @@
-import sys
 import os
+import sys
 
-from common.singleton import Singleton
+from PySnakeAndLadder.common.singleton import Singleton
 
 sys.path.append(os.path.realpath('..'))
 
@@ -26,5 +26,5 @@ class GameAssets(metaclass=Singleton):
     
     @property
     def ladders(self) -> dict:
-        return self.get_ladder
+        return self._get_ladder
     

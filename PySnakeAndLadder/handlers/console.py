@@ -1,7 +1,7 @@
 import os
 import sys
 
-from models.dice_type import DiceType
+from PySnakeAndLadder.models.dice_type import DiceType
 
 sys.path.append(os.path.realpath('..'))
 
@@ -30,16 +30,19 @@ class Console:
         dice_type_as_list = DiceType.to_list()
         
         user_choice = 0
-        valid_choice = range(1, len(dice_type_as_list) + 1)
+        valid_choice = tuple(range(1, len(dice_type_as_list) + 1))
         
-        message = '* Please choose dice-type - '
+        message = '* Please choose dice-type:'
         for index, type in enumerate(dice_type_as_list):
-            message += f'{index+1}. {type} ;'
-        message += f'. Your choice ({valid_choice}): '
+            message += f'\n\t{index+1} - {type}'
+        message += f'\nYour choice {valid_choice}: '
             
         while user_choice not in valid_choice:
-            user_choice = input(message)
-            
+            try:
+                user_choice = int(input(message))
+            except ValueError:
+                user_choice = 0
+                
         return list(DiceType)[user_choice - 1]
             
     @staticmethod

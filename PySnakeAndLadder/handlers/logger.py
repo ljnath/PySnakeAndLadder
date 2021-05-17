@@ -2,7 +2,7 @@ import logging
 import os
 import sys
 
-from common.singleton import Singleton
+from PySnakeAndLadder.common.singleton import Singleton
 
 sys.path.append(os.path.realpath('..'))
 

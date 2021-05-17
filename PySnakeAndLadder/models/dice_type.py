@@ -5,5 +5,5 @@ class DiceType(Enum):
     CROOKED = 'crooked'
     
     @staticmethod
-    def to_list(self):
+    def to_list():
         return list(map(lambda dt: dt.value,  DiceType))

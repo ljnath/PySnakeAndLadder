@@ -1,4 +1,9 @@
-from logger import Logger
+import os
+import sys
+
+from PySnakeAndLadder.handlers.logger import Logger
+
+sys.path.append(os.path.realpath('..'))
 
 class BaseException(Exception):
     def __init__(self):
