@@ -87,10 +87,11 @@ class GameAssets(metaclass=Singleton):
             if snake.head < snake.tail:
                 raise InvalidGameAssetException('Snake should always be from top to bottom')
             if snake.head == 100:
-                raise InvalidGameAssetException('Snakes head at at game end point is not pratical enough !')
-            
-            snake_positions = (snake.head, snake.tail)
-            if any(snake_positions) > 100 and any(snake_positions) <  1:
+                raise InvalidGameAssetException('Snakes head at game end point is not pratical enough !')
+            if snake.head == snake.tail:
+                raise InvalidGameAssetException('Snakes head and tails cannot be same !')
+
+            if not 0 < snake.head < 101 or not 0 < snake.tail < 101:
                 raise InvalidGameAssetException('Snake head or tail is outside the board range (1-100)')
             
         self.__logger.info('Validating "ladders" game asset')
@@ -100,9 +101,10 @@ class GameAssets(metaclass=Singleton):
                 raise InvalidGameAssetException('Ladders are suppose to to be climbed up and not down')
             if ladder.end - ladder.start < 20:
                 raise InvalidGameAssetException('Horizontal or too small ladder are not practical enough !')
+            if not 0 < ladder.start < 101 or not 0 < ladder.end < 101:
+                raise InvalidGameAssetException('Ladder head or tail is outside the board range (1-100)')
             
             ladder_position = (ladder.start, ladder.end)
             if 100 in ladder_position or 1 in ladder_position:
                 raise InvalidGameAssetException('Ladders cannot start or end at position 0 and 100')
-            if any(ladder_position) > 100 and any(ladder_position) <  1:
-                raise InvalidGameAssetException('Ladder head or tail is outside the board range (1-100)')
+            

@@ -7,7 +7,7 @@ from py_snake_and_ladder.handlers.exceptions import (
     InvalidGameAssetException, MissingPlayerNameException, UnsupportedDiceTypeException)
 from py_snake_and_ladder.models.dice_type import DiceType
 from py_snake_and_ladder.models.dice import Dice
-from py_snake_and_ladder.models.game_assets import GameAssets
+from py_snake_and_ladder.models.game_assets import GameAssets, Snake, Ladder
 from py_snake_and_ladder.models.player import Player
 
 
@@ -61,29 +61,99 @@ def test_game_assets_property():
     assert game_assets.snakes is not None
     assert game_assets.ladders is not None
     
-# def test_game_assets_validation(mocker):
-#     """
-#     test validation in GameAssets model
-#     """
-#     def mocked_method():
-#         return {
-#             0 : (14, 70),
-#             1 : (50, 3),
-#             2 : (93, 32)
-#         }
+def test_game_assets_snake_validation(mocker):
+    """
+    test to check snake validations
+    """
+    class GameAssetsMocked:
+        def opposite_snake(self):
+            return [Snake(10, 20)]
+        
+        def snake_at_100(self):
+            return [Snake(100, 50)]
+        
+        def snake_with_same_head_and_tail(self):
+            return [Snake(80, 80)]
+        
+        def snake_head_outside_board(self):
+            return [Snake(102, 50)]
 
-#     bad_value = {
-#             0 : (14, 70),
-#             1 : (50, 3),
-#             2 : (93, 32)
-#         }
-#     game_assets = GameAssets()
-#     mocker.patch("py_snake_and_ladder.models.game_assets.GameAssets.snakes", return_value = bad_value)
+        def snake_tail_outside_board(self):
+            return [Snake(60, 0)]
     
-#     # mocker.patch("py_snake_and_ladder.models.game_assets.GameAssets.ladders", return_value = bad_asset)
-#     with pytest.raises(InvalidGameAssetException):
-#         game_assets.validate()
+    game_assets = GameAssets()
+    method_to_patch = "py_snake_and_ladder.models.game_assets.GameAssets.snakes"
     
+    mocker.patch(method_to_patch, GameAssetsMocked().opposite_snake())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+        
+    mocker.patch(method_to_patch, GameAssetsMocked().snake_at_100())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+    
+    mocker.patch(method_to_patch, GameAssetsMocked().snake_with_same_head_and_tail())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+    
+    mocker.patch(method_to_patch, GameAssetsMocked().snake_head_outside_board())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+        
+    mocker.patch(method_to_patch, GameAssetsMocked().snake_tail_outside_board())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+
+def test_game_assets_ladder_validation(mocker):
+    """
+    test to check ladder validations
+    """
+    class GameAssetsMocked:
+        def opposite_ladder(self):
+            return [Ladder(20, 10)]
+        
+        def ladder_at_0(self):
+            return [Ladder(0, 50)]
+        
+        def ladder_at_100(self):
+            return [Ladder(50, 100)]
+        
+        def ladder_starts_outside_board(self):
+            return [Ladder(0, 100)]
+
+        def ladder_ends_outside_board(self):
+            return [Ladder(5, 101)]
+        
+        def ladder_is_too_small(self):
+            return [Ladder(20, 25)]
+    
+    game_assets = GameAssets()
+    method_to_patch = "py_snake_and_ladder.models.game_assets.GameAssets.ladders"
+    
+    mocker.patch(method_to_patch, GameAssetsMocked().opposite_ladder())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+        
+    mocker.patch(method_to_patch, GameAssetsMocked().ladder_at_0())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+    
+    mocker.patch(method_to_patch, GameAssetsMocked().ladder_at_100())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+    
+    mocker.patch(method_to_patch, GameAssetsMocked().ladder_starts_outside_board())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+        
+    mocker.patch(method_to_patch, GameAssetsMocked().ladder_ends_outside_board())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+    
+    mocker.patch(method_to_patch, GameAssetsMocked().ladder_is_too_small())
+    with pytest.raises(InvalidGameAssetException):
+        game_assets.validate()
+        
 def test_dice_type():
     """
     test DiceType instance
