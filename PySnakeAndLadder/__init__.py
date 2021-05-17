@@ -41,18 +41,18 @@ class PySnakeAndLadder:
         # main game loop
         while(not self.__game_board.has_ended):
             self.__game_board.draw()
-            self.__game_board.player_notification = None
+            self.__game_board.notification_msg = None
             
             self.__game_board.roll_dice()
             
             # game notification based on game or player actions
-            self.__game_board.player_notification = f'New dice value is {self.__player.dice.current_value}.\n'
+            self.__game_board.notification_msg = f'New dice value is {self.__player.dice.value}.\n'
             
-            if self.__player.position + self.__player.dice.current_value > 100:
-                self.__game_board.player_notification += f'Dice value cannot be used as it exceeds board limit.'
+            if self.__player.position + self.__player.dice.value > 100:
+                self.__game_board.notification_msg += f'Dice value is too large !'
                 continue
             
-            self.__player.position += self.__player.dice.current_value  # updating player position
+            self.__player.position += self.__player.dice.value          # updating player position
             self.__check_for_hit()                                      # checking if player has either hit a snake or ladder
             
             if self.__player.position == 100:                           # ending game when player reaches the end position
@@ -60,7 +60,7 @@ class PySnakeAndLadder:
 
         # notifying player of game status and ending game
         if self.__game_board.has_ended:
-            self.__game_board.player_notification += f'Congratulations {self.__player.name}! You have won the game.'
+            self.__game_board.notification_msg += f'Congratulations {self.__player.name}! You have won the game.'
             self.__game_board.draw()
     
     def __check_for_hit(self):
@@ -72,7 +72,7 @@ class PySnakeAndLadder:
             if value[0] == self.__player.position:
                 self.__player.position = value[1]
                 self.__logger.info(f'{self.__player.name} has climbed ladder {key+1} from {value[0]} to {value[1]}')
-                self.__game_board.player_notification += f'Great, you have climbed ladder {key+1} from position {value[0]} to {value[1]}'
+                self.__game_board.notification_msg += f'Great, you just hit ladder no. {key+1} and climbed from {value[0]} to {value[1]}'
                 break
         
         # checking if player has hit the head of snake, if yes then player position to updated to the tail of the snake
@@ -80,6 +80,6 @@ class PySnakeAndLadder:
             if value[0] == self.__player.position:
                 self.__player.position = value[1]
                 self.__logger.info(f'{self.__player.name} has been bitten by snake {key+1} in position {value[1]} ; your new position is {value[0]}')
-                self.__game_board.player_notification += f'Oops!, you have been bitten by snake {key+1} in position {value[1]}, your new position is {value[0]}'
+                self.__game_board.notification_msg += f'Oops!, you have been bitten by snake no. {key+1} at {value[1]}, you are now swallowed to {value[0]}'
                 break
         

@@ -1,92 +1,104 @@
 import os
 import sys
 
+from PySnakeAndLadder.handlers.console import Console
 from PySnakeAndLadder.handlers.exceptions import InvalidGameAssetException
 from PySnakeAndLadder.handlers.logger import Logger
-from PySnakeAndLadder.handlers.console import Console
 from PySnakeAndLadder.models.game_assets import GameAssets
 from PySnakeAndLadder.models.player import Player
 
 sys.path.append(os.path.realpath('..'))
 
 class GameBoard:
+    """
+    GameBoard class for hanlding interaction with the gameboard
+    """
     def __init__(self, player: Player):
-        self.__player = player
-        self.__has_ended = False
-        self.__player_notification = None
-        self.__game_assets = GameAssets()
-        self.__logger = Logger().get()
+        self.__player = player              # player name
+        self.__has_ended = False            # game has not ended yet
+        self.__notification_msg = None        # game has not started so there is not game notification
         
+        
+        self.__logger = Logger().get()
         self.__logger.info(f'Created game board for player {self.__player.name}; selected dice type is {self.__player.dice.type}')
-        self.__validate_game_assets()
+        
+        self.__game_assets = GameAssets()
     
     @property
-    def has_ended(self):
+    def has_ended(self) -> bool:
+        """
+        Property for geting the game end status
+        """
         return self.__has_ended
     
     @has_ended.setter
-    def has_ended(self, value:bool):
+    def has_ended(self, value:bool) -> None:
+        """
+        Property for setting the game end status
+        """
         self.__has_ended = value
         
     @property
-    def player_notification(self):
-        return self.__player_notification
+    def notification_msg(self) -> str:
+        """
+        Property for getting notification message for the player
+        """
+        return self.__notification_msg
     
-    @player_notification.setter
-    def player_notification(self, value:str):
-        self.__player_notification = value
+    @notification_msg.setter
+    def notification_msg(self, value:str) -> None:
+        """
+        Property for setting a notification message for the player
+        """
+        self.__notification_msg = value
+                
+    def roll_dice(self):
+        """
+        Method to wait for user to roll the dice
+        """
+        Console.get_roll_confirmation()
+        self.__player.dice.roll()
+        self.__logger.debug(f'Roll complete, dice value is {self.__player.dice.value}')
     
-    def __validate_game_assets(self):
-        self.__logger.info('Validating game asset data')
-        
-        # validating snake data
-        for key, value in self.__game_assets.snakes.items():
-            self.__logger.debug(f'Validating snake asset - key = {key} ; value = {value}')
-            if value[0] < value[1]:
-                raise InvalidGameAssetException('Snake should always be from top to bottom')
-            elif value[1] == 100:
-                raise InvalidGameAssetException('Snakes head at at game end point is not pratical enough !')
-            # elif value[0] - value[1] < 20:
-            #     raise InvalidGameAssetException('Horizontal or too small snakes are not practical enough !')
-            elif any(value) > 100 or any(value) <  1:
-                raise InvalidGameAssetException('Snake head or tail is outside the board range (1-100)')
-            
-        # validating ladder data
-        for key, value in self.__game_assets.ladders.items():
-            self.__logger.debug(f'Validating ladder asset - key = {key} ; value = {value}')
-            if value[0] > value[1]:
-                raise InvalidGameAssetException('Ladders are suppose to to be climbed up and not down')
-            elif 100 in value or 1 in value:
-                raise InvalidGameAssetException('Ladders cannot start or end at position 0 and 100')
-            elif value[1] - value[0] < 20:
-                raise InvalidGameAssetException('Horizontal or too small ladder are not practical enough !')
-            elif any(value) > 100 or any(value) <  1:
-                raise InvalidGameAssetException('Ladder head or tail is outside the board range (1-100)')
-        
-    def draw(self):
+    def draw(self) -> None:
+        """
+        Method for drawing the game board for the gameplay
+        """
         Console.clear()
-        print(f'\n{"SNAKE & LADDER 0.1".center(131)}')
+        print(f'\n{"SNAKE & LADDER 0.1".center(131)}')          # welcome game title
         
-        positions = list(range(1, 101))
+        board_numbers = list(range(1, 101))                     # all possible board numbers 1 to 100
         
+        # updating snake head & tail in the board_numbers, 
+        # SX_HEAD is the head of the snake while SX_TAIL is its end
         for key, value in self.__game_assets.snakes.items():
-            positions[value[0] - 1] = f'S{key+1}_HEAD'
-            positions[value[1] - 1] = f'S{key+1}_TAIL'
+            board_numbers[value[0] - 1] = f'S{key+1}_HEAD'
+            board_numbers[value[1] - 1] = f'S{key+1}_TAIL'
         
+        # updating ladder start & end in the board_numbers,
+        # LX_START is the start of the ladder while LX_END is the end of it
         for key, value in self.__game_assets.ladders.items():
-            positions[value[0] - 1] = f'L{key+1}_START'
-            positions[value[1] - 1] = f'L{key+1}_END'
+            board_numbers[value[0] - 1] = f'L{key+1}_START'
+            board_numbers[value[1] - 1] = f'L{key+1}_END'
             
+        # updating board_numbers with player position if player has moved
+        # board_number is updated to player name in upper case enclosed with '*' character
         if self.__player.position > 0:
-            positions[self.__player.position - 1] = f'* {self.__player.name[:10].upper()} *'
+            board_numbers[self.__player.position - 1] = f'* {self.__player.name[:8].upper()} *'
             
-        self.__draw_board(positions)
+        # draw the game board with the board_numbers
+        self.__draw_board(board_numbers)
+        # draw the game legends
         self.__draw_legend()
         
-        if self.player_notification:
-            print(f'\nINFO: {self.player_notification}\n')
+        # show notification message is anything is set
+        if self.notification_msg:
+            print(f'\nINFO: {self.notification_msg}\n')
         
-    def __draw_board(self, board_data):
+    def __draw_board(self, board_data : list) -> None:
+        """
+        Private method for drawing the game board 
+        """
         board_data.reverse()
         cell_length = 12
         seperator_length = cell_length * 10 + 11                            # cell_length * item_count + seperator_count
@@ -102,7 +114,10 @@ class GameBoard:
             [print(f'|{str(item).center(cell_length)}', end = '') for item in items]
             print(f'|\n{"-"*seperator_length}', end='')
         
-    def __draw_legend(self):
+    def __draw_legend(self) -> None:
+        """
+        Private method for drawing the game legends
+        """
         print('\n\n  GAME LEGEND:')
         for key, value in self.__game_assets.snakes.items():
             print(f'\t* Snake {key+1} : {value[0]}-{value[1]}', end = '\t')
@@ -111,10 +126,3 @@ class GameBoard:
             print(f'\t* Ladder {key+1} : {value[0]}-{value[1]}', end = '\t')
         print('\n\t* LX_START : start of ladder\n\t* LX_END : end of ladder\n\t* SX_HEAD : start or head of snake\n\t* SX_TAIL : end or tail of snake')
         print('\n')
-            
-    def roll_dice(self):
-        Console.get_roll_confirmation()
-        self.__player.dice.roll()
-        self.__logger.debug(f'Roll complete, dice value is {self.__player.dice.current_value}')
-        print(f'Dice value is {self.__player.dice.current_value}')
-        
