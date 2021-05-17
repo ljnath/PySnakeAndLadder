@@ -34,15 +34,14 @@ class GameAssets(metaclass=Singleton):
             2 : (72, 95)
         }
 
-        self.__validate()
+        self.__validate_snakes()
+        self.__validate_ladders()
 
-    def __validate(self):
+    def __validate_snakes(self):
         """
-        Private method for validating current game assets
+        Private method for validating snakes
         """
-        self.__logger.info('Validating game asset')
-
-        # validating snake data
+        self.__logger.info('Validating "snake" game asset')
         for key, value in self.snakes.items():
             self.__logger.debug(f'Validating snake asset - key = {key} ; value = {value}')
             if value[0] < value[1]:
@@ -54,7 +53,11 @@ class GameAssets(metaclass=Singleton):
             if any(value) > 100 or any(value) <  1:
                 raise InvalidGameAssetException('Snake head or tail is outside the board range (1-100)')
 
-        # validating ladder data
+    def __validate_ladders(self):
+        """
+        Private method for validating ladders
+        """
+        self.__logger.info('Validating "ladders" game asset')
         for key, value in self.ladders.items():
             self.__logger.debug(f'Validating ladder asset - key = {key} ; value = {value}')
             if value[0] > value[1]:
