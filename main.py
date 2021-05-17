@@ -6,8 +6,8 @@
 from PySnakeAndLadder import PySnakeAndLadder
 
 def play_game():
-    pysl = PySnakeAndLadder()
-    pysl.play()
+    py_snake_and_laddder = PySnakeAndLadder()
+    py_snake_and_laddder.play()
 
 if __name__ == '__main__':
     play_game()
