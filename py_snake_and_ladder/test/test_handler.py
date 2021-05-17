@@ -56,10 +56,3 @@ def test_game_board_roll(mocker):
     new_dice_value = player.dice.value
         
     assert old_dice_value != new_dice_value
-    
-def test_console_instance(mocker):
-    """
-    test to check console class
-    """    
-    mocker.patch('input()', return_value="foo")
-    assert Console.get_player_name() == 'foo'
